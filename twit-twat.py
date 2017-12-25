@@ -19,6 +19,7 @@
 #
 
 import sys
+import json
 import random
 import gi
 
@@ -26,9 +27,8 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstVideo', '1.0')
 gi.require_version('Soup', '2.4')
-gi.require_version('Json', '1.0')
 
-from gi.repository import GLib, Gtk, Gdk, Gst, Soup, Json, GstVideo, GdkX11
+from gi.repository import GLib, Gtk, Gdk, Gst, Soup, GstVideo, GdkX11
 
 class TwitTwatApp(Gtk.Application):
 	channel = ''
@@ -126,16 +126,9 @@ class TwitTwatApp(Gtk.Application):
 		dialog.destroy()
 
 	def on_get_access_token(self, session, msg):
-		parser = Json.Parser()
-		parser.load_from_data(msg.response_body.data, -1)
-		reader = Json.Reader()
-		reader.set_root(parser.get_root())
+		parser = json.loads(msg.response_body.data)
 
-		reader.read_member('_total')
-		total = reader.get_int_value()
-		reader.end_member()
-
-		if total != 1:
+		if not parser['_total']:
 			dialog = Gtk.MessageDialog(self.window, Gtk.DialogFlags.DESTROY_WITH_PARENT, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, 'Channel offline')
 			dialog.run()
 			dialog.destroy()
@@ -146,18 +139,7 @@ class TwitTwatApp(Gtk.Application):
 		session.queue_message(message, self.on_play_stream)
 
 	def on_play_stream(self, session, msg):
-		parser = Json.Parser()
-		parser.load_from_data(msg.response_body.data, -1)
-		reader = Json.Reader()
-		reader.set_root(parser.get_root())
-
-		reader.read_member('sig')
-		sig = reader.get_string_value()
-		reader.end_member()
-
-		reader.read_member('token')
-		token = reader.get_string_value()
-		reader.end_member()
+		parser = json.loads(msg.response_body.data)
 
 		if self.playbin:
 			self.playbin.set_state(Gst.State.NULL)
@@ -169,7 +151,7 @@ class TwitTwatApp(Gtk.Application):
 
 		self.playbin.connect('element-setup', self.on_element_setup)
 		self.playbin.get_bus().add_watch(GLib.PRIORITY_DEFAULT, self.on_bus_message)
-		self.playbin.set_property('uri', 'http://usher.twitch.tv/api/channel/hls/' + self.channel + '.m3u8?' + 'player=twitchweb&' + 'token=' + token + '&' + 'sig=' + sig + '&' + 'allow_audio_only=true&allow_source=true&type=any&p=' + str(random.randrange(0, 1000000)))
+		self.playbin.set_property('uri', 'http://usher.twitch.tv/api/channel/hls/' + self.channel + '.m3u8?' + 'player=twitchweb&' + 'token=' + parser['token'] + '&' + 'sig=' + parser['sig'] + '&' + 'allow_audio_only=true&allow_source=true&type=any&p=' + str(random.randrange(0, 1000000)))
 		self.playbin.set_property('latency', 2 * Gst.SECOND)
 		self.playbin.set_property('connection_speed', self.connection_speed)
 		self.playbin.set_state(Gst.State.PAUSED)
