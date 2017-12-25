@@ -19,6 +19,7 @@
 #
 
 import sys
+import random
 import gi
 
 gi.require_version('Gtk', '3.0')
@@ -158,8 +159,6 @@ class TwitTwatApp(Gtk.Application):
 		token = reader.get_string_value()
 		reader.end_member()
 
-		#rand = GLib.Rand.int_range(0, 999999)
-
 		if self.playbin:
 			self.playbin.set_state(Gst.State.NULL)
 
@@ -170,7 +169,7 @@ class TwitTwatApp(Gtk.Application):
 
 		self.playbin.connect('element-setup', self.on_element_setup)
 		self.playbin.get_bus().add_watch(GLib.PRIORITY_DEFAULT, self.on_bus_message)
-		self.playbin.set_property('uri', 'http://usher.twitch.tv/api/channel/hls/' + self.channel + '.m3u8?' + 'player=twitchweb&' + 'token=' + token + '&' + 'sig=' + sig + '&' + 'allow_audio_only=true&allow_source=true&type=any&p=0')
+		self.playbin.set_property('uri', 'http://usher.twitch.tv/api/channel/hls/' + self.channel + '.m3u8?' + 'player=twitchweb&' + 'token=' + token + '&' + 'sig=' + sig + '&' + 'allow_audio_only=true&allow_source=true&type=any&p=' + str(random.randrange(0, 1000000)))
 		self.playbin.set_property('latency', 2 * Gst.SECOND)
 		self.playbin.set_property('connection_speed', self.connection_speed)
 		self.playbin.set_state(Gst.State.PAUSED)
