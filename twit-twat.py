@@ -165,7 +165,8 @@ class TwitTwatApp(Gtk.Application):
 
 		self.playbin = Gst.ElementFactory.make('playbin')
 
-		self.playbin.set_window_handle(self.area.get_window().get_xid())
+		if isinstance(self.area.get_window(), GdkX11.X11Window):
+			self.playbin.set_window_handle(self.area.get_window().get_xid())
 
 		self.playbin.connect('element-setup', self.on_element_setup)
 		self.playbin.get_bus().add_watch(GLib.PRIORITY_DEFAULT, self.on_bus_message)
