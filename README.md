@@ -14,10 +14,10 @@ $ sudo apt install gstreamer1.0-vaapi
 Controls
 --------
 
-- **G:** Go to channel
-- **+/-:** Change volume
-- **D-Click:** Toggle full screen
-- **Esc:** Exit full screen
-- **S:** Set bandwidth limit
-- **H** Controls info
-- **Q:** Quit
+- **G**: Go to channel
+- **+/-**: Change volume
+- **D-Click**: Toggle full screen
+- **Esc**: Exit full screen
+- **S**: Set bandwidth limit
+- **H**: Controls info
+- **Q**: Quit
