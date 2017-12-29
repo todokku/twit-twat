@@ -1,6 +1,6 @@
-project('twit-twat', ['c', 'vala'])
+project('twit-twat', 'c')
 
-executable('twit-twat', 'twit-twat.vala',
+executable('twit-twat', 'twit-twat.c',
 	dependencies : [
 		dependency('gtk+-3.0'),
 		dependency('gstreamer-1.0', version : '>= 1.10.5'),
@@ -8,6 +8,7 @@ executable('twit-twat', 'twit-twat.vala',
 		dependency('libsoup-2.4'),
 		dependency('json-glib-1.0'),
 		dependency('gdk-x11-3.0'),
+		dependency('gdk-wayland-3.0'),
 	],
 	install : true
 )
