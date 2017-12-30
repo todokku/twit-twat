@@ -269,7 +269,7 @@ gboolean draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
   if (playbin) {
     GstState state;
     gst_element_get_state(playbin, &state, NULL, GST_CLOCK_TIME_NONE);
-    if (state != GST_STATE_NULL)
+    if (state == GST_STATE_NULL)
       cairo_paint(cr);
     return TRUE;
   }
