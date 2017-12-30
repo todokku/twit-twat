@@ -85,6 +85,12 @@ static gboolean bus_watch(GstBus* bus, GstMessage* message, gpointer user_data)
   return TRUE;
 }
 
+static void element_setup(GstElement* playbin, GstElement* element, gpointer user_data)
+{
+  if (gst_element_get_factory(element) == gst_element_factory_find("glimagesink"))
+    g_object_set(element, "handle-events", FALSE, NULL);
+}
+
 static void soup_callback_token(SoupSession* session, SoupMessage* msg, gpointer user_data)
 {
   JsonParser* parser = json_parser_new();
@@ -115,6 +121,8 @@ static void soup_callback_token(SoupSession* session, SoupMessage* msg, gpointer
   }
 
   playbin = gst_element_factory_make("playbin", NULL);
+
+  g_signal_connect(G_OBJECT(playbin), "element-setup", G_CALLBACK(element_setup), NULL);
 
   g_object_set(playbin, "uri", uri, NULL);
   g_object_set(playbin, "latency", 2 * GST_SECOND, NULL);
