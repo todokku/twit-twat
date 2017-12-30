@@ -263,6 +263,12 @@ static gboolean delete_event(GtkWidget* widget, GdkEvent* event, gpointer user_d
   return FALSE;
 }
 
+gboolean draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
+{
+  cairo_paint(cr);
+  return FALSE;
+}
+
 static void activate(void)
 {
   window = gtk_application_window_new(app);
@@ -281,6 +287,7 @@ static void activate(void)
   g_signal_connect(G_OBJECT(window), "key-press-event", G_CALLBACK(key_press_event), NULL);
   g_signal_connect(G_OBJECT(window), "button-press-event", G_CALLBACK(button_press_event), NULL);
   g_signal_connect(G_OBJECT(window), "delete-event", G_CALLBACK(delete_event), NULL);
+  g_signal_connect(area, "draw", G_CALLBACK(draw), NULL);
 }
 
 int main(int argc, char** argv)
