@@ -61,6 +61,7 @@ static gboolean bus_watch(GstBus* bus, GstMessage* message, gpointer user_data)
     {
       GError* err;
       gst_message_parse_error(message, &err, NULL);
+      gst_element_set_state(playbin, GST_STATE_NULL);
       GtkWidget* dialog = gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, err->message);
       gtk_dialog_run(GTK_DIALOG(dialog));
       gtk_widget_destroy(dialog);
