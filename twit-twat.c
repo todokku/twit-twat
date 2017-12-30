@@ -265,6 +265,12 @@ static gboolean delete_event(GtkWidget* widget, GdkEvent* event, gpointer user_d
 
 gboolean draw(GtkWidget* widget, cairo_t* cr, gpointer user_data)
 {
+  if (playbin) {
+    GstState state;
+    gst_element_get_state(playbin, &state, NULL, GST_CLOCK_TIME_NONE);
+    if (state != GST_STATE_NULL)
+      return TRUE;
+  }
   cairo_paint(cr);
   return FALSE;
 }
