@@ -172,7 +172,7 @@ static void soup_callback(SoupSession* session, SoupMessage* msg, gpointer user_
 static void activate_channel(GtkWidget* widget, gpointer user_data)
 {
   if (g_strcmp0(gtk_entry_get_text(GTK_ENTRY(widget)), "") != 0) {
-    g_string_assign(channel, g_ascii_strdown(gtk_entry_get_text(GTK_ENTRY(widget)), -1));
+    g_string_assign(channel, g_strstrip(g_ascii_strdown(gtk_entry_get_text(GTK_ENTRY(widget)), -1)));
   }
 
   gchar* url = g_strdup_printf("https://api.twitch.tv/kraken/streams?channel=%s", channel->str);
